@@ -6,12 +6,14 @@ import {TaskType} from './App';
 //3.Retunr of func
 
 type TodoListPropsType = {
-    title: string
-    tasks: Array<TaskType>
+    title: string,
+    tasks: Array<TaskType>,
+    removeTask:(taskId:number)=>void
 }
 
 const TodoList = (props: TodoListPropsType) => {
 
+//TODO: выделить отдельную функцию getTasksItemList
 
     const tasksListItem = props.tasks.map((task: TaskType) => {
         return (
@@ -19,7 +21,7 @@ const TodoList = (props: TodoListPropsType) => {
                 <li key={task.id}>
                     <input type="checkbox" checked={task.isDone}/>
                     <span>{task.title}</span>
-                    <button onClick={() => alert(task.id)}>x</button>
+                    <button onClick={() => props.removeTask(task.id)}>x</button>
                 </li>
 
         )
