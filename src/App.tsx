@@ -33,7 +33,7 @@ function App() {
     };
 
 
-    let [filter, setFilter] = useState("All")
+    let [filter, setFilter] = useState <FilterValuesType>("All")
 
     // once user press UI filter button, onClickHandler receive new nextFilerValue
     // set this new filter value as filter
@@ -42,24 +42,24 @@ function App() {
         setFilter(newFilterValue)
     };
 
-    // new variable which will be transferred to render as task list based on task filter
-    let taskForRender: Array<TaskType> = []
 
     //filter main task list based on  the filter button
-    if (filter === "All") {
-        taskForRender = tasks
-    } else if (filter == "Active") {
-        taskForRender = tasks.filter(task => task.isDone === false)
-    } else if (filter == "Completed") {
-        taskForRender = tasks.filter(task => task.isDone === true)
-    }
+    const getFilteredTasks =
+        (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
+        switch (filter) {
+            case "Completed" :
+                return tasks.filter(task => task.isDone)
+            case "Active":
+                return tasks.filter(task => !task.isDone)
+           default:
+                return tasks
+        }
+    };
+    const filteredTasks: Array<TaskType> = getFilteredTasks(tasks, filter)
 
     const addTask = (title: string) => {
-        const newTask: TaskType = {
-            id: v1(), title: title, isDone: false
-        }
-
-        setTasks([newTask,...tasks])
+        const newTask: TaskType = {id: v1(), title, isDone: false}
+        setTasks([newTask, ...tasks])
     };
 
 
@@ -67,7 +67,7 @@ function App() {
         <div className="App">
             <TodoList
                 //list of tasks after filtration (initialState: All)
-                tasks={taskForRender}
+                tasks={filteredTasks}
                 title={todoListTitle}
                 //for removal button
                 removeTask={removeTask}
