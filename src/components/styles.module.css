@@ -1,0 +1,8 @@
+.btnActive {
+    background-color: darkseagreen;
+}
+
+.completedTask {
+    color: palevioletred;
+    font-weight: bolder;
+}
