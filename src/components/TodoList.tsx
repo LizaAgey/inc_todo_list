@@ -18,6 +18,8 @@ type TodoListPropsType = {
 
 const TodoList = (props: TodoListPropsType) => {
 
+        const [taskTitle, setTaskTitle] = useState<string>('')
+        const [error, setError] = useState<boolean>(false)
 
         //put ONE task (as data) to html-tag to display
         //оборачивалка тасок в теги
@@ -26,10 +28,7 @@ const TodoList = (props: TodoListPropsType) => {
                 const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(task.id, event.currentTarget.checked)
 
                 return (
-                    <div key={
-                        task.id
-                    }
-                    >
+                    <div key={task.id}>
                         <input
                             type="checkbox"
                             checked={task.isDone}
@@ -42,21 +41,26 @@ const TodoList = (props: TodoListPropsType) => {
             }
         ;
 
-//EACH task (as data) put in Function which will create a html-tag for rendering of it
-// передаем список тасок в помещение в теги
+        //EACH task (as data) put in Function which will create a html-tag for rendering of it
+        // передаем список тасок в помещение в теги
         const tasksListItem = props.tasks.length > 0
             ? props.tasks.map((task: TaskType) => {
                 return getTasksItemList(task)
             }) : (<div>List is empty</div>)
 
-        const [taskTitle, setTaskTitle] = useState<string>('')
-
         const addTaskHandler = () => {
-            props.addTask(taskTitle)
+            const trimmedTaskTitle = taskTitle.trim()
+
+            trimmedTaskTitle ? props.addTask(trimmedTaskTitle) : setError(true)
+
             setTaskTitle('')
+
         };
 
-        const onChangeSetTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => setTaskTitle(event.currentTarget.value);
+        const onChangeSetTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
+            error && setError(false)
+            setTaskTitle(event.currentTarget.value)
+        };
 
         const onEnterAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
@@ -66,6 +70,8 @@ const TodoList = (props: TodoListPropsType) => {
 
         const onClickFilterHandlerCreator = (filter: FilterValuesType) => () => props.changeFilterState(filter)
 
+        //styles as an example
+        // const errorStyles = {color: 'red', fontWeight: 'bolder'}
 
         return (
             <div>
@@ -74,8 +80,10 @@ const TodoList = (props: TodoListPropsType) => {
                     <input value={taskTitle}
                            onChange={onChangeSetTaskTitleHandler}
                            onKeyDown={onEnterAddTaskHandler}
+                           className={error ? styles.inputError : ''}
                     />
                     <button onClick={addTaskHandler}>Add</button>
+                    {error && <div className={error ? styles.errorTitle : ""}>Please enter the task title</div>}
                 </div>
                 <div>
                     {/*render list of tags with tasks' data*/}

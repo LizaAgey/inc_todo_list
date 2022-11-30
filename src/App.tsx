@@ -58,6 +58,7 @@ function App() {
     const filteredTasks: Array<TaskType> = getFilteredTasks(tasks, filter)
 
     const addTask = (title: string) => {
+
         const newTask: TaskType = {id: v1(), title, isDone: false}
         setTasks([newTask, ...tasks])
     };

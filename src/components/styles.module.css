@@ -6,3 +6,12 @@
     color: palevioletred;
     font-weight: bolder;
 }
+
+.inputError {
+    border: red 2px solid;
+    outline: none;
+}
+.errorTitle {
+    color: red;
+    font-weight: bolder
+}
