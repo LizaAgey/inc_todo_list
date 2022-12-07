@@ -6,13 +6,15 @@ import styles from './styles.module.css'
 
 
 type TodoListPropsType = {
+    todoListId: string
     title: string,
     tasks: Array<TaskType>
-    removeTask: (taskId: string) => void,
-    changeFilterState: (newFilterValue: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskID: string, isDone: boolean) => void
+    removeTask: (todoListId: string, taskId: string) => void,
+    changeFilterState: (todoListId: string, newFilterValue: FilterValuesType) => void
+    addTask: (todoListId: string, title: string) => void
+    changeTaskStatus: (todoListId: string, taskID: string, isDone: boolean) => void
     filter: FilterValuesType
+    removeTodoList: (todoListId: string) => void
 }
 
 
@@ -24,8 +26,8 @@ const TodoList = (props: TodoListPropsType) => {
         //put ONE task (as data) to html-tag to display
         //оборачивалка тасок в теги
         const getTasksItemList = (task: TaskType) => {
-                const removeTaskHandler = () => props.removeTask(task.id);
-                const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(task.id, event.currentTarget.checked)
+                const removeTaskHandler = () => props.removeTask(props.todoListId, task.id);
+                const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(props.todoListId, task.id, event.currentTarget.checked)
 
                 return (
                     <div key={task.id}>
@@ -43,7 +45,7 @@ const TodoList = (props: TodoListPropsType) => {
 
         //EACH task (as data) put in Function which will create a html-tag for rendering of it
         // передаем список тасок в помещение в теги
-        const tasksListItem = props.tasks.length > 0
+        const tasksListItems = props.tasks.length > 0
             ? props.tasks.map((task: TaskType) => {
                 return getTasksItemList(task)
             }) : (<div>List is empty</div>)
@@ -51,7 +53,7 @@ const TodoList = (props: TodoListPropsType) => {
         const addTaskHandler = () => {
             const trimmedTaskTitle = taskTitle.trim()
 
-            trimmedTaskTitle ? props.addTask(trimmedTaskTitle) : setError(true)
+            trimmedTaskTitle ? props.addTask(props.todoListId, trimmedTaskTitle) : setError(true)
 
             setTaskTitle('')
 
@@ -68,14 +70,20 @@ const TodoList = (props: TodoListPropsType) => {
             }
         }
 
-        const onClickFilterHandlerCreator = (filter: FilterValuesType) => () => props.changeFilterState(filter)
+        const onClickFilterHandlerCreator = (todoListId:string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
 
         //styles as an example
         // const errorStyles = {color: 'red', fontWeight: 'bolder'}
 
+    const removeTodoListHandler = () => {
+       props.removeTodoList(props.todoListId)
+    };
+
         return (
             <div>
-                <h3>{props.title}</h3>
+                <h3>{props.title}
+                <button onClick={removeTodoListHandler}>X</button>
+                </h3>
                 <div>
                     <input value={taskTitle}
                            onChange={onChangeSetTaskTitleHandler}
@@ -87,17 +95,17 @@ const TodoList = (props: TodoListPropsType) => {
                 </div>
                 <div>
                     {/*render list of tags with tasks' data*/}
-                    {tasksListItem}
+                    {tasksListItems}
                 </div>
                 <div>
                     <button className={props.filter === 'All' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator('All')}>All
+                            onClick={onClickFilterHandlerCreator(props.todoListId,'All')}>All
                     </button>
                     <button className={props.filter === 'Active' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator('Active')}>Active
+                            onClick={onClickFilterHandlerCreator(props.todoListId,'Active')}>Active
                     </button>
                     <button className={props.filter === 'Completed' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator('Completed')}>Completed
+                            onClick={onClickFilterHandlerCreator(props.todoListId,'Completed')}>Completed
                     </button>
                 </div>
             </div>
