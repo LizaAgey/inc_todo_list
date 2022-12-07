@@ -55,22 +55,19 @@ function App() {
     // user press DELETE button and the function is called;
     // set global list of tasks as list WITHOUT a task for deletion (filter by task ID)
     const removeTask = (todoListId: string, taskId: string) => {
-        setTasks({
-                ...tasks, //get all tasks
-                [todoListId]: //rewrite a task with specific TODOList ID
-                    tasks[todoListId].filter(task => task.id !== taskId) // value for this task is filtered based on incoming taskID
-            }
-        )
+        let filteredTasks = tasks[todoListId].filter(task => task.id !== taskId)
+
+        //get all tasks
+        //rewrite a task with specific TODOList ID
+        //value for this task is filtered based on incoming taskID
+        setTasks({...tasks, [todoListId]: filteredTasks})
     };
 
     const changeTaskStatus = (todoListId: string, taskID: string, isDone: boolean) => {
-        setTasks({
-            ...tasks, [todoListId]: tasks[todoListId].map(
-                (task) => task.id === taskID
-                    ? {...task, isDone}
-                    : task
-            )
-        })
+        let changedTasks = tasks[todoListId].map(
+            (task) => task.id === taskID ? {...task, isDone} : task)
+
+        setTasks({...tasks, [todoListId]: changedTasks})
     };
 
     // once user press UI filter button, onClickHandler receive new nextFilerValue
@@ -99,7 +96,9 @@ function App() {
 
     const removeTodoList = (todoListId: string) => {
         setTodoLists(todoLists.filter(list => list.id !== todoListId))
+
         delete tasks[todoListId]
+        setTasks({...tasks}) //fo rerender
     };
 
     return (

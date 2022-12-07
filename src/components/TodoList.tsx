@@ -41,7 +41,6 @@ const TodoList = (props: TodoListPropsType) => {
                     </div>
                 )
             }
-        ;
 
         //EACH task (as data) put in Function which will create a html-tag for rendering of it
         // передаем список тасок в помещение в теги
@@ -70,19 +69,19 @@ const TodoList = (props: TodoListPropsType) => {
             }
         }
 
-        const onClickFilterHandlerCreator = (todoListId:string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
+        const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
 
         //styles as an example
         // const errorStyles = {color: 'red', fontWeight: 'bolder'}
 
-    const removeTodoListHandler = () => {
-       props.removeTodoList(props.todoListId)
-    };
+        const removeTodoListHandler = () => {
+            props.removeTodoList(props.todoListId)
+        };
 
         return (
             <div>
                 <h3>{props.title}
-                <button onClick={removeTodoListHandler}>X</button>
+                    <button onClick={removeTodoListHandler}>X</button>
                 </h3>
                 <div>
                     <input value={taskTitle}
@@ -91,7 +90,7 @@ const TodoList = (props: TodoListPropsType) => {
                            className={error ? styles.inputError : ''}
                     />
                     <button onClick={addTaskHandler}>Add</button>
-                    {error && <div className={error ? styles.errorTitle : ""}>Please enter the task title</div>}
+                    {error && <div className={error ? styles.errorTitle : ''}>Please enter the task title</div>}
                 </div>
                 <div>
                     {/*render list of tags with tasks' data*/}
@@ -99,13 +98,13 @@ const TodoList = (props: TodoListPropsType) => {
                 </div>
                 <div>
                     <button className={props.filter === 'All' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator(props.todoListId,'All')}>All
+                            onClick={onClickFilterHandlerCreator(props.todoListId, 'All')}>All
                     </button>
                     <button className={props.filter === 'Active' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator(props.todoListId,'Active')}>Active
+                            onClick={onClickFilterHandlerCreator(props.todoListId, 'Active')}>Active
                     </button>
                     <button className={props.filter === 'Completed' ? styles.btnActive : ''}
-                            onClick={onClickFilterHandlerCreator(props.todoListId,'Completed')}>Completed
+                            onClick={onClickFilterHandlerCreator(props.todoListId, 'Completed')}>Completed
                     </button>
                 </div>
             </div>
