@@ -3,6 +3,7 @@ import {TaskType} from '../App';
 import {FilterValuesType} from '../App';
 
 import styles from './styles.module.css'
+import AddItemForm from './AddItemForm';
 
 
 type TodoListPropsType = {
@@ -20,62 +21,31 @@ type TodoListPropsType = {
 
 const TodoList = (props: TodoListPropsType) => {
 
-        const [taskTitle, setTaskTitle] = useState<string>('')
-        const [error, setError] = useState<boolean>(false)
-
-        //put ONE task (as data) to html-tag to display
-        //оборачивалка тасок в теги
         const getTasksItemList = (task: TaskType) => {
-                const removeTaskHandler = () => props.removeTask(props.todoListId, task.id);
-                const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(props.todoListId, task.id, event.currentTarget.checked)
+            const removeTaskHandler = () => props.removeTask(props.todoListId, task.id);
+            const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(props.todoListId, task.id, event.currentTarget.checked)
 
-                return (
-                    <div key={task.id}>
-                        <input
-                            type="checkbox"
-                            checked={task.isDone}
-                            onChange={changeTaskStatusHandler}
-                        />
-                        <span className={task.isDone ? styles.completedTask : ''}>{task.title}</span>
-                        <button onClick={removeTaskHandler}>x</button>
-                    </div>
-                )
-            }
-
-        //EACH task (as data) put in Function which will create a html-tag for rendering of it
-        // передаем список тасок в помещение в теги
-        const tasksListItems = props.tasks.length > 0
-            ? props.tasks.map((task: TaskType) => {
-                return getTasksItemList(task)
-            }) : (<div>List is empty</div>)
-
-        const addTaskHandler = () => {
-            const trimmedTaskTitle = taskTitle.trim()
-
-            trimmedTaskTitle ? props.addTask(props.todoListId, trimmedTaskTitle) : setError(true)
-
-            setTaskTitle('')
-
-        };
-
-        const onChangeSetTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-            error && setError(false)
-            setTaskTitle(event.currentTarget.value)
-        };
-
-        const onEnterAddTaskHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-            if (event.key === 'Enter') {
-                addTaskHandler()
-            }
+            return (
+                <div key={task.id}>
+                    <input
+                        type="checkbox"
+                        checked={task.isDone}
+                        onChange={changeTaskStatusHandler}
+                    />
+                    <span className={task.isDone ? styles.completedTask : ''}>{task.title}</span>
+                    <button onClick={removeTaskHandler}>x</button>
+                </div>
+            )
         }
-
+        const tasksListItems = props.tasks.length > 0 ? props.tasks.map((task: TaskType) => {
+            return getTasksItemList(task)
+        }) : (<div>List is empty</div>)
         const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
-
-        //styles as an example
-        // const errorStyles = {color: 'red', fontWeight: 'bolder'}
-
         const removeTodoListHandler = () => {
             props.removeTodoList(props.todoListId)
+        };
+        const addNewTask = (titleFromInput: string) => {
+            props.addTask(props.todoListId, titleFromInput )
         };
 
         return (
@@ -83,17 +53,8 @@ const TodoList = (props: TodoListPropsType) => {
                 <h3>{props.title}
                     <button onClick={removeTodoListHandler}>X</button>
                 </h3>
+                <AddItemForm parentAddItem={addNewTask}/>
                 <div>
-                    <input value={taskTitle}
-                           onChange={onChangeSetTaskTitleHandler}
-                           onKeyDown={onEnterAddTaskHandler}
-                           className={error ? styles.inputError : ''}
-                    />
-                    <button onClick={addTaskHandler}>Add</button>
-                    {error && <div className={error ? styles.errorTitle : ''}>Please enter the task title</div>}
-                </div>
-                <div>
-                    {/*render list of tags with tasks' data*/}
                     {tasksListItems}
                 </div>
                 <div>

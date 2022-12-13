@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import TodoList from './components/TodoList';
 import {v1} from 'uuid';
+import AddItemForm from './components/AddItemForm';
 
 
 export type TaskType = {
@@ -51,9 +52,6 @@ function App() {
         const newTask: TaskType = {id: v1(), title, isDone: false}
         setTasks({...tasks, [todoListId]: [newTask, ...tasks[todoListId]]})
     };
-
-    // user press DELETE button and the function is called;
-    // set global list of tasks as list WITHOUT a task for deletion (filter by task ID)
     const removeTask = (todoListId: string, taskId: string) => {
         let filteredTasks = tasks[todoListId].filter(task => task.id !== taskId)
 
@@ -70,9 +68,6 @@ function App() {
         setTasks({...tasks, [todoListId]: changedTasks})
     };
 
-    // once user press UI filter button, onClickHandler receive new nextFilerValue
-    // set this new filter value as filter
-    // App re-render once changed
     const changeFilterState = (todoListId: string, newFilterValue: FilterValuesType) => {
         setTodoLists(
             todoLists.map(
@@ -81,7 +76,17 @@ function App() {
         )
     };
 
-    //filter main task list based on  the filter button
+    const addToDoList = (titleFromInput: string) => {
+        const newListId = v1()
+        const newList: TodoListsType = {
+            id: newListId,
+            title: titleFromInput,
+            filter: 'All'
+        }
+        setTodoLists([...todoLists, newList])
+        setTasks({...tasks, [newListId]: []})
+    };
+
     const getFilteredTasks =
         (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
             switch (filter) {
@@ -98,30 +103,32 @@ function App() {
         setTodoLists(todoLists.filter(list => list.id !== todoListId))
 
         delete tasks[todoListId]
-        setTasks({...tasks}) //fo rerender
+        setTasks({...tasks}) //to rerender
     };
+
+    const todoListsComponents = todoLists.map(
+        list => {
+            const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter) //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
+
+            return <TodoList
+                key={list.id}
+                todoListId={list.id}
+                title={list.title}
+                tasks={filteredTasks}
+                removeTask={removeTask}
+                changeFilterState={changeFilterState}
+                addTask={addTask}
+                changeTaskStatus={changeTaskStatus}
+                filter={list.filter}
+                removeTodoList={removeTodoList}
+            />
+        }
+    )
 
     return (
         <div className="App">
-            {todoLists.map(
-                list => {
-                    const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter) //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
-
-                    return <TodoList
-                        key={list.id}
-                        todoListId={list.id}
-                        title={list.title}
-                        tasks={filteredTasks}
-                        removeTask={removeTask}
-                        changeFilterState={changeFilterState}
-                        addTask={addTask}
-                        changeTaskStatus={changeTaskStatus}
-                        filter={list.filter}
-                        removeTodoList={removeTodoList}
-                    />
-                }
-            )
-            }
+            <AddItemForm parentAddItem={addToDoList}/>
+            {todoListsComponents}
         </div>
     );
 }
