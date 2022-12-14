@@ -4,6 +4,7 @@ import {FilterValuesType} from '../App';
 
 import styles from './styles.module.css'
 import AddItemForm from './AddItemForm';
+import EditableSpan from './EditableSpan';
 
 
 type TodoListPropsType = {
@@ -32,7 +33,9 @@ const TodoList = (props: TodoListPropsType) => {
                         checked={task.isDone}
                         onChange={changeTaskStatusHandler}
                     />
-                    <span className={task.isDone ? styles.completedTask : ''}>{task.title}</span>
+                    <div style={{display:"inline-block"}}  className={task.isDone ? styles.completedTask : ''}>
+                        <EditableSpan title={task.title}/>
+                    </div>
                     <button onClick={removeTaskHandler}>x</button>
                 </div>
             )
@@ -45,7 +48,7 @@ const TodoList = (props: TodoListPropsType) => {
             props.removeTodoList(props.todoListId)
         };
         const addNewTask = (titleFromInput: string) => {
-            props.addTask(props.todoListId, titleFromInput )
+            props.addTask(props.todoListId, titleFromInput)
         };
 
         return (
