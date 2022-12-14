@@ -1,13 +1,10 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent} from 'react';
 import {TaskType} from '../App';
 import {FilterValuesType} from '../App';
 
 import styles from './styles.module.css'
 import AddItemForm from './AddItemForm';
 import EditableSpan from './EditableSpan';
-import {Simulate} from 'react-dom/test-utils';
-import change = Simulate.change;
-
 
 type TodoListPropsType = {
     todoListId: string

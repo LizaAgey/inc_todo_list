@@ -9,16 +9,15 @@ const EditableSpan: React.FC<EditableSpanType> = (props) => {
     const [isEditMode, setEditMode] = useState<boolean>(false)
     const [newTitle, setNewTitle] = useState(props.title)
 
-    const onChangeSetTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setNewTitle(event.currentTarget?.value)
-    };
-
     const onEditMode = () => setEditMode(true)
     const offEditMode = () => {
         setEditMode(false)
         props.changeTitle(newTitle)
     }
     const onKeyDownOffEditMode = (event: KeyboardEvent<HTMLInputElement>) => {event.key === 'Enter' && offEditMode()};
+    const onChangeSetTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setNewTitle(event.currentTarget?.value)
+    };
 
     return (isEditMode
             ? <input

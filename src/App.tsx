@@ -4,7 +4,6 @@ import TodoList from './components/TodoList';
 import {v1} from 'uuid';
 import AddItemForm from './components/AddItemForm';
 
-
 export type TaskType = {
     id: string
     title: string
@@ -109,21 +108,24 @@ function App() {
         ))
     };
     const todoListsComponents = todoLists.map(list => {
-        const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter) //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
+        //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
+        const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter)
 
         return <TodoList
             key={list.id}
+
             todoListId={list.id}
             title={list.title}
+            filter={list.filter}
+            removeTodoList={removeTodoList}
+            changeTaskTitle={changeTaskTitle}
+            changeTodoListTitle={changeTodoListTitle}
+
             tasks={filteredTasks}
             removeTask={removeTask}
             changeFilterState={changeTodoListFilter}
             addTask={addTask}
             changeTaskStatus={changeTaskStatus}
-            filter={list.filter}
-            removeTodoList={removeTodoList}
-            changeTaskTitle={changeTaskTitle}
-            changeTodoListTitle={changeTodoListTitle}
         />
     })
 

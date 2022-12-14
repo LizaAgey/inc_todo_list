@@ -9,22 +9,20 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
     const [taskTitle, setTaskTitle] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
 
-    const onChangeSetTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        error && setError(false)
-        setTaskTitle(event.currentTarget.value)
-    };
-
-    const addItemHandler = () => {
+    const addItem = () => {
         const trimmedTaskTitle = taskTitle.trim()
         trimmedTaskTitle ? props.parentAddItem(trimmedTaskTitle) : setError(true)
         setTaskTitle('')
     };
-
     const onEnterAddItemHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            addItemHandler()
+            addItem()
         }
     }
+    const onChangeSetTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        error && setError(false)
+        setTaskTitle(event.currentTarget.value)
+    };
 
     const errorMessage = error
         ? <div className={error ? styles.errorTitle : ''}>Please enter the title</div>
@@ -37,7 +35,7 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
                    onKeyDown={onEnterAddItemHandler}
                    className={error ? styles.inputError : ''}
             />
-            <button onClick={addItemHandler}>Add</button>
+            <button onClick={addItem}>Add</button>
             {errorMessage}
         </div>
     );
