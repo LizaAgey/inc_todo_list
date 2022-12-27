@@ -75,17 +75,6 @@ function App() {
             el => el.id === todoListId ? {...el, filter: newFilterValue} : el
         ))
     };
-    const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
-        switch (filter) {
-            case 'Completed' :
-                return tasks.filter(task => task.isDone)
-            case 'Active':
-                return tasks.filter(task => !task.isDone)
-            default:
-                return tasks
-        }
-    };
-
     const addToDoList = (titleFromInput: string) => {
         const newListId = v1()
         const newList: TodoListsType = {
@@ -106,6 +95,17 @@ function App() {
         setTodoLists(todoLists.map(
             el => el.id === todoListId ? {...el, title: newTitleValue} : el
         ))
+    };
+
+    const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
+        switch (filter) {
+            case 'Completed' :
+                return tasks.filter(task => task.isDone)
+            case 'Active':
+                return tasks.filter(task => !task.isDone)
+            default:
+                return tasks
+        }
     };
     const todoListsComponents = todoLists.map(list => {
         //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList

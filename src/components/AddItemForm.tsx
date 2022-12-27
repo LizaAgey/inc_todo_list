@@ -1,5 +1,8 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from './styles.module.css';
+import Button from '@material-ui/core/Button';
+import {IconButton} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 type AddItemFormType = {
     parentAddItem: (title: string) => void
@@ -35,7 +38,10 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
                    onKeyDown={onEnterAddItemHandler}
                    className={error ? styles.inputError : ''}
             />
-            <button onClick={addItem}>Add</button>
+
+            <IconButton onClick={addItem}>
+                <SendIcon/>
+            </IconButton>
             {errorMessage}
         </div>
     );
