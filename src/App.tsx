@@ -3,7 +3,7 @@ import './App.css';
 import TodoList from './components/TodoList';
 import {v1} from 'uuid';
 import AddItemForm from './components/AddItemForm';
-import {AppBar, Container, IconButton, Toolbar, Typography, Grid} from '@mui/material';
+import {AppBar, Container, IconButton, Toolbar, Typography, Grid, Paper} from '@mui/material';
 import {Menu} from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 
@@ -114,22 +114,26 @@ function App() {
         //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
         const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter)
 
-        return <TodoList
-            key={list.id}
+        return <Grid item>
+            <Paper sx={{p:"15px"}} elevation={16}>
+                <TodoList
+                    key={list.id}
 
-            todoListId={list.id}
-            title={list.title}
-            filter={list.filter}
-            removeTodoList={removeTodoList}
-            changeTaskTitle={changeTaskTitle}
-            changeTodoListTitle={changeTodoListTitle}
+                    todoListId={list.id}
+                    title={list.title}
+                    filter={list.filter}
+                    removeTodoList={removeTodoList}
+                    changeTaskTitle={changeTaskTitle}
+                    changeTodoListTitle={changeTodoListTitle}
 
-            tasks={filteredTasks}
-            removeTask={removeTask}
-            changeFilterState={changeTodoListFilter}
-            addTask={addTask}
-            changeTaskStatus={changeTaskStatus}
-        />
+                    tasks={filteredTasks}
+                    removeTask={removeTask}
+                    changeFilterState={changeTodoListFilter}
+                    addTask={addTask}
+                    changeTaskStatus={changeTaskStatus}
+                />
+            </Paper>
+        </Grid>
     })
 
     return (
@@ -154,10 +158,10 @@ function App() {
             </AppBar>
 
             <Container fixed>
-                <Grid container>
+                <Grid container sx={{m:"40px 0"}}>
                     <AddItemForm parentAddItem={addToDoList}/>
                 </Grid>
-                <Grid container>
+                <Grid container spacing={6}>
                     {todoListsComponents}
                 </Grid>
 
