@@ -7,7 +7,7 @@ import EditableSpan from './EditableSpan';
 import Button from '@material-ui/core/Button';
 import {IconButton} from '@material-ui/core';
 import ClearIcon from '@mui/icons-material/Clear';
-import {Checkbox} from '@mui/material';
+import {Checkbox, List, ListItem} from '@mui/material';
 
 
 export type TodoListPropsType = {
@@ -34,24 +34,25 @@ const TodoList = (props: TodoListPropsType) => {
             };
 
             return (
-                <div key={task.id}>
+                <ListItem key={task.id} sx={{p:"0px"}}>
 
                     <Checkbox checked={task.isDone}
                               onChange={changeTaskStatusHandler}
                               size='small'
                     />
                     <div style={{display: 'inline-block'}} className={task.isDone ? styles.completedTask : ''}>
-                        <EditableSpan title={task.title} changeTitle={changeTaskTitle}/>
+                        <EditableSpan title={task.title} changeTitle={changeTaskTitle} />
                     </div>
                     <IconButton onClick={removeTaskHandler}>
-                        <ClearIcon/>
+                        <ClearIcon fontSize='small'/>
                     </IconButton>
-                </div>
+                </ListItem>
             )
         }
         const tasksListItems = props.tasks.length > 0
-            ? props.tasks.map((task: TaskType) => getTasksItemList(task))
+            ? (<List style={{all:"unset"}}>{props.tasks.map((task: TaskType) => getTasksItemList(task))}</List>)
             : (<div>List is empty</div>)
+
         const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
         const removeTodoListHandler = () => {
             props.removeTodoList(props.todoListId)
@@ -67,7 +68,7 @@ const TodoList = (props: TodoListPropsType) => {
             <div>
                 <h3>
                     <EditableSpan title={props.title} changeTitle={changeTodoListTile}/>
-                    <IconButton onClick={removeTodoListHandler}>
+                    <IconButton onClick={removeTodoListHandler}  color="secondary">
                         <ClearIcon/>
                     </IconButton>
                 </h3>

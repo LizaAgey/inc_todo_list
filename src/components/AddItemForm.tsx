@@ -1,8 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from './styles.module.css';
-import Button from '@material-ui/core/Button';
-import {IconButton} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import {Button, IconButton, TextField} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 type AddItemFormType = {
     parentAddItem: (title: string) => void
@@ -27,22 +26,27 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
         setTaskTitle(event.currentTarget.value)
     };
 
-    const errorMessage = error
-        ? <div className={error ? styles.errorTitle : ''}>Please enter the title</div>
-        : null
-
     return (
         <div>
-            <input value={taskTitle}
-                   onChange={onChangeSetTaskTitleHandler}
-                   onKeyDown={onEnterAddItemHandler}
-                   className={error ? styles.inputError : ''}
+            <TextField
+                value={taskTitle}
+                onChange={onChangeSetTaskTitleHandler}
+                onKeyDown={onEnterAddItemHandler}
+                variant={'outlined'}
+                size={'small'}
+                error={error}
+                helperText ={error && "Please enter the title"}
             />
 
-            <IconButton onClick={addItem}>
-                <SendIcon/>
-            </IconButton>
-            {errorMessage}
+            <Button
+                onClick={addItem}
+                variant={'contained'}
+                sx={{ml: '3px', fontSize:"12px", width: "fit-content"}}
+                endIcon={<AddIcon/>}
+                size={"small"}
+            >
+                Add
+            </Button>
         </div>
     );
 };

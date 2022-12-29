@@ -3,6 +3,9 @@ import './App.css';
 import TodoList from './components/TodoList';
 import {v1} from 'uuid';
 import AddItemForm from './components/AddItemForm';
+import {AppBar, Container, IconButton, Toolbar, Typography, Grid} from '@mui/material';
+import {Menu} from '@material-ui/icons';
+import Button from '@material-ui/core/Button';
 
 export type TaskType = {
     id: string
@@ -131,8 +134,35 @@ function App() {
 
     return (
         <div className="App">
-            <AddItemForm parentAddItem={addToDoList}/>
-            {todoListsComponents}
+
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{mr: 2}}
+                    >
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                        Todo Lists
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+
+            <Container fixed>
+                <Grid container>
+                    <AddItemForm parentAddItem={addToDoList}/>
+                </Grid>
+                <Grid container>
+                    {todoListsComponents}
+                </Grid>
+
+            </Container>
+
         </div>
     );
 }
