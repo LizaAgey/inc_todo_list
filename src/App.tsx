@@ -151,7 +151,7 @@ function App() {
                         <Menu/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        Todo Lists
+                        TodoLists
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
