@@ -13,6 +13,8 @@ import {
     todoListsReducer
 } from './store/todo-lists-reducer';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './store/tasks-reducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootState} from './store/store';
 
 export type TaskType = {
     id: string
@@ -30,63 +32,37 @@ export type TodoListsType = {
 }
 
 function AppWithRedux() {
-
-    let todoListId1 = v1()
-    let todoListId2 = v1()
-
-    const [todoLists, dispatchToTodolists] = useReducer(todoListsReducer, [
-        {id: todoListId1, title: 'What to learn', filter: 'All'},
-        {id: todoListId2, title: 'What to buy', filter: 'All'},
-    ])
-    const [tasks, dispatchToTasks] = useReducer(tasksReducer, {
-        [todoListId1]: [
-            {id: v1(), title: '1 HTML & CSS', isDone: true},
-            {id: v1(), title: '1 JS', isDone: true},
-            {id: v1(), title: '1 REACT', isDone: false},
-            {id: v1(), title: '1 Abc', isDone: false},
-            {id: v1(), title: '1 Cde', isDone: false}
-        ],
-        [todoListId2]: [
-            {id: v1(), title: '2 HTML & CSS', isDone: true},
-            {id: v1(), title: '2 JS', isDone: true},
-            {id: v1(), title: '2 REACT', isDone: false},
-            {id: v1(), title: '2 Abc', isDone: false},
-            {id: v1(), title: '2 Cde', isDone: false}
-        ]
-    })
+    const dispatch = useDispatch()
+    const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todoLists)
+    const tasks = useSelector<AppRootState, TasksType>(state => state.tasks)
 
     const addTask = (todoListId: string, title: string) => {
-        dispatchToTasks(addTaskAC(title, todoListId))
+        dispatch(addTaskAC(title, todoListId))
     };
     const removeTask = (todoListId: string, taskId: string) => {
         let action = removeTaskAC(taskId, todoListId)
-        dispatchToTasks(action)
+        dispatch(action)
     };
     const changeTaskStatus = (todoListId: string, taskID: string, isDone: boolean) => {
-        dispatchToTasks(changeTaskStatusAC(taskID, isDone, todoListId))
+        dispatch(changeTaskStatusAC(taskID, isDone, todoListId))
     };
     const changeTaskTitle = (taskID: string, title: string, todoListId: string) => {
-        dispatchToTasks(changeTaskTitleAC(taskID, todoListId, title))
+        dispatch(changeTaskTitleAC(taskID, todoListId, title))
     };
 
-
     const changeTodoListFilter = (todoListId: string, newFilterValue: FilterValuesType) => {
-       dispatchToTodolists(ChangeTodolistFilterActionCreator(todoListId,newFilterValue))
+        dispatch(ChangeTodolistFilterActionCreator(todoListId, newFilterValue))
     };
     const addToDoList = (titleFromInput: string) => {
         let action = AddTodoListActionCreator(titleFromInput)
-        dispatchToTasks(action)
-        dispatchToTodolists(action)
+        dispatch(action)
     };
-
     const removeTodoList = (todoListId: string) => {
         let action = RemoveTodolistActionCreator(todoListId)
-        dispatchToTodolists(action)
-        dispatchToTasks(action)
+        dispatch(action)
     };
-
     const changeTodoListTitle = (todoListId: string, newTitleValue: string) => {
-       dispatchToTodolists(ChangeTodolistTitleActionCreator(newTitleValue,todoListId))
+        dispatch(ChangeTodolistTitleActionCreator(newTitleValue, todoListId))
     };
 
     const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
@@ -103,11 +79,9 @@ function AppWithRedux() {
         //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
         const filteredTasks: Array<TaskType> = getFilteredTasks(tasks[list.id], list.filter)
 
-        return <Grid item>
+        return <Grid item key={list.id}>
             <Paper sx={{p: '15px'}} elevation={16}>
                 <TodoList
-                    key={list.id}
-
                     todoListId={list.id}
                     title={list.title}
                     filter={list.filter}

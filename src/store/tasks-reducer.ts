@@ -1,5 +1,12 @@
 import {TasksType} from '../App';
-import {ADD_TODOLIST, AddTodoListActionType, REMOVE_TODOLIST, RemoveTodoListActionType} from './todo-lists-reducer';
+import {
+    ADD_TODOLIST,
+    AddTodoListActionType,
+    REMOVE_TODOLIST,
+    RemoveTodoListActionType,
+    todoListId1, todoListId2
+} from './todo-lists-reducer';
+import {v1} from 'uuid';
 
 
 
@@ -15,7 +22,9 @@ type ActionsType = RemoveTaskActionType
     | AddTodoListActionType
     | RemoveTodoListActionType
 
-export const tasksReducer = (state: TasksType, action: ActionsType): TasksType => {
+const initialState : TasksType= {}
+
+export const tasksReducer = (state: TasksType = initialState, action: ActionsType): TasksType => {
     switch (action.type) {
         case 'REMOVE-TASK':
             return {
@@ -57,7 +66,7 @@ export const tasksReducer = (state: TasksType, action: ActionsType): TasksType =
                  return rest
              }
         default:
-            throw new Error("The type is not accessible")
+            return state
     }
 }
 
