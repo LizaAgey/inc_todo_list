@@ -1,13 +1,5 @@
-import {TasksType} from '../App';
-import {
-    ADD_TODOLIST,
-    AddTodoListActionType,
-    REMOVE_TODOLIST,
-    RemoveTodoListActionType,
-    todoListId1, todoListId2
-} from './todo-lists-reducer';
-import {v1} from 'uuid';
-
+import {TasksType} from '../AppWithRedux';
+import {ADD_TODOLIST, AddTodoListActionType, REMOVE_TODOLIST, RemoveTodoListActionType} from './todo-lists-reducer';
 
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
