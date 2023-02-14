@@ -1,7 +1,6 @@
 import {TasksType} from '../AppWithRedux';
 import {ADD_TODOLIST, AddTodoListActionType, REMOVE_TODOLIST, RemoveTodoListActionType} from './todolists-reducer';
 
-
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 export type AddTaskActionType = ReturnType<typeof addTaskAC>
 export type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
@@ -18,6 +17,19 @@ const REMOVE_TASK = 'REMOVE-TASK'
 const ADD_TASK = 'ADD-TASK'
 const CHANGE_TASK_STATUS = 'CHANGE-TASK-STATUS'
 const CHANGE_TASK_TITLE = 'CHANGE-TASK-TITLE'
+
+export const removeTaskAC = (taskID: string, todolistID: string) => {
+    return {type: REMOVE_TASK, taskID, todolistID} as const
+}
+export const addTaskAC = (taskTitle: string, todolistID: string) => {
+    return {type:ADD_TASK, taskTitle, todolistID} as const
+}
+export const changeTaskStatusAC = (taskID: string, newStatus: boolean, todolistID: string) => {
+    return {type: CHANGE_TASK_STATUS, taskID, newStatus, todolistID} as const
+}
+export const changeTaskTitleAC = (taskID: string, todolistID: string, newTitle: string,) => {
+    return {type: CHANGE_TASK_TITLE, taskID, newTitle, todolistID} as const
+}
 
 const initialState : TasksType= {}
 
@@ -67,18 +79,3 @@ export const tasksReducer = (state: TasksType = initialState, action: ActionsTyp
     }
 }
 
-export const removeTaskAC = (taskID: string, todolistID: string) => {
-    return {type: REMOVE_TASK, taskID, todolistID} as const
-}
-
-export const addTaskAC = (taskTitle: string, todolistID: string) => {
-    return {type:ADD_TASK, taskTitle, todolistID} as const
-}
-
-export const changeTaskStatusAC = (taskID: string, newStatus: boolean, todolistID: string) => {
-    return {type: CHANGE_TASK_STATUS, taskID, newStatus, todolistID} as const
-}
-
-export const changeTaskTitleAC = (taskID: string, todolistID: string, newTitle: string,) => {
-    return {type: CHANGE_TASK_TITLE, taskID, newTitle, todolistID} as const
-}

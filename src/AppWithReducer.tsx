@@ -1,18 +1,5 @@
-import React, {Reducer, useReducer, useState} from 'react';
+import React from 'react';
 import './App.css';
-import TodoList from './components/TodoList';
-import {v1} from 'uuid';
-import AddItemForm from './components/AddItemForm';
-import {AppBar, Container, IconButton, Toolbar, Typography, Grid, Paper} from '@mui/material';
-import {Menu} from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
-import {
-    AddTodoListActionCreator,
-    ChangeTodolistFilterActionCreator, ChangeTodolistTitleActionCreator,
-    RemoveTodolistActionCreator,
-    todolistsReducer
-} from './store/todolists-reducer';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './store/tasks-reducer';
 
 export type TaskType = {
     id: string
@@ -71,22 +58,22 @@ function AppWithReducer() {
     //
     //
     // const changeTodoListFilter = (todoListId: string, newFilterValue: FilterValuesType) => {
-    //    dispatchToTodolists(ChangeTodolistFilterActionCreator(todoListId,newFilterValue))
+    //    dispatchToTodolists(ChangeTodolistFilterAC(todoListId,newFilterValue))
     // };
     // const addToDoList = (titleFromInput: string) => {
-    //     let action = AddTodoListActionCreator(titleFromInput)
+    //     let action = AddTodoListAC(titleFromInput)
     //     dispatchToTasks(action)
     //     dispatchToTodolists(action)
     // };
     //
     // const removeTodoList = (todoListId: string) => {
-    //     let action = RemoveTodolistActionCreator(todoListId)
+    //     let action = RemoveTodolistAC(todoListId)
     //     dispatchToTodolists(action)
     //     dispatchToTasks(action)
     // };
     //
     // const changeTodoListTitle = (todoListId: string, newTitleValue: string) => {
-    //    dispatchToTodolists(ChangeTodolistTitleActionCreator(newTitleValue,todoListId))
+    //    dispatchToTodolists(ChangeTodolistTitleAC(newTitleValue,todoListId))
     // };
     //
     // const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {

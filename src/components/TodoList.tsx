@@ -11,9 +11,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppRootState} from '../store/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../store/tasks-reducer';
 import {
-    ChangeTodolistFilterActionCreator,
-    ChangeTodolistTitleActionCreator,
-    RemoveTodolistActionCreator
+    ChangeTodolistFilterAC,
+    ChangeTodolistTitleAC,
+    RemoveTodolistAC
 } from '../store/todolists-reducer';
 
 
@@ -65,9 +65,9 @@ const TodoList = ({currentTodolist}: TodoListPropsType) => {
             ? (<List style={{all: 'unset'}}>{filteredTasks.map((task: TaskType) => getTasksItemList(task))}</List>)
             : (<div>List is empty</div>)
 
-        const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => dispatch(ChangeTodolistFilterActionCreator(todoListId, filter))
-        const removeTodoListHandler = () => dispatch(RemoveTodolistActionCreator(id))
-        const changeTodoListTile = (title: string) => dispatch(ChangeTodolistTitleActionCreator(title, id))
+        const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => dispatch(ChangeTodolistFilterAC(todoListId, filter))
+        const removeTodoListHandler = () => dispatch(RemoveTodolistAC(id))
+        const changeTodoListTile = (title: string) => dispatch(ChangeTodolistTitleAC(title, id))
 
         return (
             <div>

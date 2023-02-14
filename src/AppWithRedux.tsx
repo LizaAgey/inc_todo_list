@@ -5,7 +5,7 @@ import AddItemForm from './components/AddItemForm';
 import {AppBar, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@mui/material';
 import {Menu} from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
-import {AddTodoListActionCreator} from './store/todolists-reducer';
+import {AddTodoListAC} from './store/todolists-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootState} from './store/store';
 
@@ -28,7 +28,7 @@ function AppWithRedux() {
     const dispatch = useDispatch()
     const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todoLists)
     const addToDoList = (titleFromInput: string) => {
-        let action = AddTodoListActionCreator(titleFromInput)
+        let action = AddTodoListAC(titleFromInput)
         dispatch(action)
     };
 

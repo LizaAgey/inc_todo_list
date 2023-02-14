@@ -1,11 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import TodoList from './components/TodoList';
-import {v1} from 'uuid';
-import AddItemForm from './components/AddItemForm';
-import {AppBar, Container, IconButton, Toolbar, Typography, Grid, Paper} from '@mui/material';
-import {Menu} from '@material-ui/icons';
-import Button from '@material-ui/core/Button';
 
 export type TaskType = {
     id: string

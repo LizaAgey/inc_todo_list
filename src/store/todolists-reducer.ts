@@ -32,34 +32,31 @@ type ChangeTodolistFilterActionType = {
     newFilterValue: FilterValuesType
 }
 
-export const RemoveTodolistActionCreator = (id: string): RemoveTodoListActionType => ({
+export const RemoveTodolistAC = (id: string): RemoveTodoListActionType => ({
     type: REMOVE_TODOLIST,
     id
 });
-export const AddTodoListActionCreator = (titleFromInput: string): AddTodoListActionType => {
+export const AddTodoListAC = (titleFromInput: string): AddTodoListActionType => {
     return {
         type: ADD_TODOLIST,
         titleFromInput,
         todoListId: v1()
     }
 };
-export const ChangeTodolistTitleActionCreator = (newTitleValue: string, todoListId: string): ChangeTodolistTitleActionType => {
+export const ChangeTodolistTitleAC = (newTitleValue: string, todoListId: string): ChangeTodolistTitleActionType => {
     return {
         type: CHANGE_TODOLIST_TITLE,
         newTitleValue,
         todoListId
     }
 };
-export const ChangeTodolistFilterActionCreator = (todoListId: string, newFilterValue: FilterValuesType): ChangeTodolistFilterActionType => {
+export const ChangeTodolistFilterAC = (todoListId: string, newFilterValue: FilterValuesType): ChangeTodolistFilterActionType => {
     return {
         type: CHANGE_TODOLIST_FILTER,
         todoListId,
         newFilterValue
     }
 };
-
-export let todoListId1 = v1()
-export let todoListId2 = v1()
 
 const initialState: Array<TodoListsType> = []
 
