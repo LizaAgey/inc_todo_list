@@ -5,12 +5,7 @@ import AddItemForm from './components/AddItemForm';
 import {AppBar, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@mui/material';
 import {Menu} from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
-import {
-    AddTodoListActionCreator,
-    ChangeTodolistFilterActionCreator,
-    ChangeTodolistTitleActionCreator,
-    RemoveTodolistActionCreator
-} from './store/todo-lists-reducer';
+import {AddTodoListActionCreator} from './store/todolists-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootState} from './store/store';
 
@@ -32,35 +27,16 @@ export type TodoListsType = {
 function AppWithRedux() {
     const dispatch = useDispatch()
     const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todoLists)
-
-    const changeTodoListFilter = (todoListId: string, newFilterValue: FilterValuesType) => {
-        dispatch(ChangeTodolistFilterActionCreator(todoListId, newFilterValue))
-    };
     const addToDoList = (titleFromInput: string) => {
         let action = AddTodoListActionCreator(titleFromInput)
         dispatch(action)
     };
-    const removeTodoList = (todoListId: string) => {
-        let action = RemoveTodolistActionCreator(todoListId)
-        dispatch(action)
-    };
-    const changeTodoListTitle = (todoListId: string, newTitleValue: string) => {
-        dispatch(ChangeTodolistTitleActionCreator(newTitleValue, todoListId))
-    };
 
     const todoListsComponents = todoLists.map(list => {
         //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
-
         return <Grid item key={list.id}>
             <Paper sx={{p: '15px'}} elevation={16}>
-                <TodoList
-                    todoListId={list.id}
-                    title={list.title}
-                    filter={list.filter}
-                    removeTodoList={removeTodoList}
-                    changeTodoListTitle={changeTodoListTitle}
-                    changeFilterState={changeTodoListFilter}
-                />
+                <TodoList currentTodolist={list}/>
             </Paper>
         </Grid>
     })

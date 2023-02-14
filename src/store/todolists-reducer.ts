@@ -63,7 +63,7 @@ export let todoListId2 = v1()
 
 const initialState: Array<TodoListsType> = []
 
-export const todoListsReducer = (todoLists: Array<TodoListsType> = initialState, action: ActionsType): Array<TodoListsType> => {
+export const todolistsReducer = (todoLists: Array<TodoListsType> = initialState, action: ActionsType): Array<TodoListsType> => {
     switch (action.type) {
         case REMOVE_TODOLIST:
             return todoLists.filter(list => list.id !== action.id)

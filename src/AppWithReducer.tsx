@@ -10,8 +10,8 @@ import {
     AddTodoListActionCreator,
     ChangeTodolistFilterActionCreator, ChangeTodolistTitleActionCreator,
     RemoveTodolistActionCreator,
-    todoListsReducer
-} from './store/todo-lists-reducer';
+    todolistsReducer
+} from './store/todolists-reducer';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './store/tasks-reducer';
 
 export type TaskType = {
@@ -34,7 +34,7 @@ function AppWithReducer() {
     // let todoListId1 = v1()
     // let todoListId2 = v1()
     //
-    // const [todoLists, dispatchToTodolists] = useReducer(todoListsReducer, [
+    // const [todoLists, dispatchToTodolists] = useReducer(todolistsReducer, [
     //     {id: todoListId1, title: 'What to learn', filter: 'All'},
     //     {id: todoListId2, title: 'What to buy', filter: 'All'},
     // ])

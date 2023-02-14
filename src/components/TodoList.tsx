@@ -1,6 +1,5 @@
 import React, {ChangeEvent} from 'react';
-import {TaskType} from '../App';
-import {FilterValuesType} from '../App';
+import {FilterValuesType, TaskType, TodoListsType} from '../AppWithRedux';
 import styles from './styles.module.css'
 import AddItemForm from './AddItemForm';
 import EditableSpan from './EditableSpan';
@@ -11,20 +10,22 @@ import {ButtonGroup, Checkbox, List, ListItem, Typography} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootState} from '../store/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../store/tasks-reducer';
+import {
+    ChangeTodolistFilterActionCreator,
+    ChangeTodolistTitleActionCreator,
+    RemoveTodolistActionCreator
+} from '../store/todolists-reducer';
 
 
 export type TodoListPropsType = {
-    todoListId: string
-    title: string,
-    filter: FilterValuesType
-    changeFilterState: (todoListId: string, newFilterValue: FilterValuesType) => void
-    removeTodoList: (todoListId: string) => void
-    changeTodoListTitle: (todoListId: string, newTitleValue: string) => void
+    currentTodolist: TodoListsType
 }
 
-const TodoList = (props: TodoListPropsType) => {
+const TodoList = ({currentTodolist}: TodoListPropsType) => {
+        let {id, title, filter} = currentTodolist
+
         const dispatch = useDispatch()
-        const tasksOfCurrentTodolist = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[props.todoListId])
+        const tasksOfCurrentTodolist = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[id])
         const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
             switch (filter) {
                 case 'Completed' :
@@ -35,12 +36,15 @@ const TodoList = (props: TodoListPropsType) => {
                     return tasks
             }
         };
-        const filteredTasks: Array<TaskType> = getFilteredTasks(tasksOfCurrentTodolist, props.filter)
+        const filteredTasks: Array<TaskType> = getFilteredTasks(tasksOfCurrentTodolist, filter)
 
+        const addNewTask = (titleFromInput: string) => {
+            dispatch(addTaskAC(title, id))
+        };
         const getTasksItemList = (task: TaskType) => {
-            const removeTaskHandler = () => dispatch(removeTaskAC(task.id, props.todoListId))
-            const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(task.id, event.currentTarget.checked, props.todoListId))
-            const changeTaskTitle = (title: string) => dispatch(changeTaskTitleAC(task.id, props.todoListId, title))
+            const removeTaskHandler = () => dispatch(removeTaskAC(task.id, id))
+            const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(task.id, event.currentTarget.checked, id))
+            const changeTaskTitle = (title: string) => dispatch(changeTaskTitleAC(task.id, id, title))
 
             return (
                 <ListItem key={task.id} sx={{p: '0px'}}>
@@ -61,21 +65,14 @@ const TodoList = (props: TodoListPropsType) => {
             ? (<List style={{all: 'unset'}}>{filteredTasks.map((task: TaskType) => getTasksItemList(task))}</List>)
             : (<div>List is empty</div>)
 
-        const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => props.changeFilterState(todoListId, filter)
-        const removeTodoListHandler = () => {
-            props.removeTodoList(props.todoListId)
-        };
-        const addNewTask = (titleFromInput: string) => {
-            dispatch(addTaskAC(props.title, props.todoListId))
-        };
-        const changeTodoListTile = (title: string) => {
-            props.changeTodoListTitle(props.todoListId, title)
-        };
+        const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => dispatch(ChangeTodolistFilterActionCreator(todoListId, filter))
+        const removeTodoListHandler = () => dispatch(RemoveTodolistActionCreator(id))
+        const changeTodoListTile = (title: string) => dispatch(ChangeTodolistTitleActionCreator(title, id))
 
         return (
             <div>
                 <Typography variant={'h5'} align={'center'}>
-                    <EditableSpan title={props.title} changeTitle={changeTodoListTile}/>
+                    <EditableSpan title={title} changeTitle={changeTodoListTile}/>
                     <IconButton onClick={removeTodoListHandler} color="secondary">
                         <ClearIcon/>
                     </IconButton>
@@ -87,23 +84,23 @@ const TodoList = (props: TodoListPropsType) => {
                 <ButtonGroup fullWidth disableElevation size="small">
                     <Button variant="contained"
                             fullWidth
-                            color={props.filter === 'All' ? 'secondary' : 'primary'}
+                            color={filter === 'All' ? 'secondary' : 'primary'}
                             sx={{mr: '3px', fontSize: '10px', minWidth: 'fit-content'}}
-                            onClick={onClickFilterHandlerCreator(props.todoListId, 'All')}>
+                            onClick={onClickFilterHandlerCreator(id, 'All')}>
                         All
                     </Button>
                     <Button variant="contained"
                             fullWidth
-                            color={props.filter === 'Active' ? 'secondary' : 'primary'}
+                            color={filter === 'Active' ? 'secondary' : 'primary'}
                             sx={{mr: '3px', fontSize: '10px', minWidth: 'fit-content'}}
-                            onClick={onClickFilterHandlerCreator(props.todoListId, 'Active')}>
+                            onClick={onClickFilterHandlerCreator(id, 'Active')}>
                         Active
                     </Button>
                     <Button variant="contained"
                             fullWidth
-                            color={props.filter === 'Completed' ? 'secondary' : 'primary'}
+                            color={filter === 'Completed' ? 'secondary' : 'primary'}
                             sx={{fontSize: '10px', minWidth: 'fit-content'}}
-                            onClick={onClickFilterHandlerCreator(props.todoListId, 'Completed')}>
+                            onClick={onClickFilterHandlerCreator(id, 'Completed')}>
                         Completed
                     </Button>
                 </ButtonGroup>
