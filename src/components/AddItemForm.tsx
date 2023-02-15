@@ -1,13 +1,13 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import styles from './styles.module.css';
-import {Button, IconButton, TextField} from '@mui/material';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
+import {Button, TextField} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 type AddItemFormType = {
     parentAddItem: (title: string) => void
 }
 
-const AddItemForm: React.FC<AddItemFormType> = (props) => {
+export const AddItemForm = memo((props:AddItemFormType) => {
+
     const [taskTitle, setTaskTitle] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
 
@@ -17,6 +17,7 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
         setTaskTitle('')
     };
     const onEnterAddItemHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        error && setError(false)
         if (event.key === 'Enter') {
             addItem()
         }
@@ -49,6 +50,5 @@ const AddItemForm: React.FC<AddItemFormType> = (props) => {
             </Button>
         </div>
     );
-};
+})
 
-export default AddItemForm;

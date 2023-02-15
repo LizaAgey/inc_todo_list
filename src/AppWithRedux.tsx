@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
-import TodoList from './components/TodoList';
-import AddItemForm from './components/AddItemForm';
+import {TodoList} from './components/TodoList';
+import {AddItemForm} from './components/AddItemForm';
 import {AppBar, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@mui/material';
 import {Menu} from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
@@ -27,19 +27,10 @@ export type TodoListsType = {
 function AppWithRedux() {
     const dispatch = useDispatch()
     const todoLists = useSelector<AppRootState, Array<TodoListsType>>(state => state.todoLists)
-    const addToDoList = (titleFromInput: string) => {
+    const addToDoList = useCallback((titleFromInput: string) => {
         let action = AddTodoListAC(titleFromInput)
         dispatch(action)
-    };
-
-    const todoListsComponents = todoLists.map(list => {
-        //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
-        return <Grid item key={list.id}>
-            <Paper sx={{p: '15px'}} elevation={16}>
-                <TodoList currentTodolist={list}/>
-            </Paper>
-        </Grid>
-    })
+    },[dispatch]) //обязательно dispatch, иначе warning
 
     return (
         <div className="App">
@@ -67,7 +58,14 @@ function AppWithRedux() {
                     <AddItemForm parentAddItem={addToDoList}/>
                 </Grid>
                 <Grid container spacing={6}>
-                    {todoListsComponents}
+                    {todoLists.map(list => {
+                        //send Array with tasks which are related to exact TODOList ID + Filter value of this TODOList
+                        return <Grid item key={list.id}>
+                            <Paper sx={{p: '15px'}} elevation={16}>
+                                <TodoList currentTodolist={list}/>
+                            </Paper>
+                        </Grid>
+                    })}
                 </Grid>
 
             </Container>
