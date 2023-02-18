@@ -15,6 +15,7 @@ import {
     ChangeTodolistTitleAC,
     RemoveTodolistAC
 } from '../store/todolists-reducer';
+import Task from './Task';
 
 
 export type TodoListPropsType = {
@@ -22,7 +23,7 @@ export type TodoListPropsType = {
 }
 
 export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
-    console.log('List')
+    console.log('todo list')
     let {id, title, filter} = currentTodolist
 
     const dispatch = useDispatch()
@@ -39,35 +40,19 @@ export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
     };
     const filteredTasks: Array<TaskType> = getFilteredTasks(tasksOfCurrentTodolist, filter)
     const addNewTask = useCallback((titleFromInput: string) => {
-        dispatch(addTaskAC(title, id))
+        dispatch(addTaskAC(titleFromInput, id))
     }, [dispatch])
 
+    const tasksListItems = filteredTasks.length > 0
+        ? (<List style={{all: 'unset'}}>{filteredTasks.map((task: TaskType) => <Task task={task} todolistId={id}
+                                                                                     key={task.id}/>)}</List>)
+        : (<div>List is empty</div>)
 
-    const getTasksItemList = (task: TaskType) => {
-        const removeTaskHandler = () => dispatch(removeTaskAC(task.id, id))
-        const changeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(task.id, event.currentTarget.checked, id))
-        const changeTaskTitle = (title: string) => dispatch(changeTaskTitleAC(task.id, id, title))
+    const onClickAllFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "All")),[dispatch])
+    const  onClickActiveFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "Active")),[dispatch])
+    const onClickCompletedFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "Completed")),[dispatch])
 
-            return (
-                <ListItem key={task.id} sx={{p: '0px'}}>
-                    <Checkbox checked={task.isDone}
-                              onChange={changeTaskStatusHandler}
-                              size="small"
-                    />
-                    <div style={{display: 'inline-block'}} className={task.isDone ? styles.completedTask : ''}>
-                        <EditableSpan title={task.title} changeTitle={changeTaskTitle}/>
-                    </div>
-                    <IconButton onClick={removeTaskHandler}>
-                        <ClearIcon fontSize="small"/>
-                    </IconButton>
-                </ListItem>
-            )
-        }
-        const tasksListItems = filteredTasks.length > 0
-            ? (<List style={{all: 'unset'}}>{filteredTasks.map((task: TaskType) => getTasksItemList(task))}</List>)
-            : (<div>List is empty</div>)
 
-    const onClickFilterHandlerCreator = (todoListId: string, filter: FilterValuesType) => () => dispatch(ChangeTodolistFilterAC(todoListId, filter))
     const removeTodoListHandler = useCallback(() => dispatch(RemoveTodolistAC(id)),[dispatch])
     const changeTodoListTile = (title: string) => dispatch(ChangeTodolistTitleAC(title, id))
 
@@ -84,28 +69,39 @@ export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
                 {tasksListItems}
             </div>
             <ButtonGroup fullWidth disableElevation size="small">
-                <Button variant="contained"
-                        fullWidth
-                        color={filter === 'All' ? 'secondary' : 'primary'}
-                        sx={{mr: '3px', fontSize: '10px', minWidth: 'fit-content'}}
-                        onClick={onClickFilterHandlerCreator(id, 'All')}>
-                    All
-                </Button>
-                <Button variant="contained"
-                        fullWidth
-                        color={filter === 'Active' ? 'secondary' : 'primary'}
-                        sx={{mr: '3px', fontSize: '10px', minWidth: 'fit-content'}}
-                        onClick={onClickFilterHandlerCreator(id, 'Active')}>
-                    Active
-                </Button>
-                <Button variant="contained"
-                        fullWidth
-                        color={filter === 'Completed' ? 'secondary' : 'primary'}
-                        sx={{fontSize: '10px', minWidth: 'fit-content'}}
-                        onClick={onClickFilterHandlerCreator(id, 'Completed')}>
-                    Completed
-                </Button>
+
+                <ButtonWithMemo currentButton={'All'}
+                                filterValue={filter}
+                                onClickHandler={onClickAllFilter}
+                />
+                <ButtonWithMemo currentButton={'Active'}
+                                filterValue={filter}
+                                onClickHandler={onClickActiveFilter}
+                />
+                <ButtonWithMemo currentButton={'Completed'}
+                                filterValue={filter}
+                                onClickHandler={onClickCompletedFilter}
+                />
+
             </ButtonGroup>
         </div>
     );
 })
+
+export type ButtonWithMemoType = {
+    filterValue: FilterValuesType
+    onClickHandler: () => void
+    currentButton: FilterValuesType
+}
+
+const ButtonWithMemo = memo((props: ButtonWithMemoType) => {
+    return <Button variant="contained"
+                   fullWidth
+                   color={props.filterValue === props.currentButton ? 'secondary' : 'primary'}
+                   sx={{fontSize: '10px', minWidth: 'fit-content'}}
+                   onClick={props.onClickHandler}>
+        {props.currentButton}
+    </Button>
+})
+
+export default TodoList;
