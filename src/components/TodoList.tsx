@@ -1,4 +1,4 @@
-import React, {ChangeEvent, memo, useCallback} from 'react';
+import React, {ChangeEvent, memo, useCallback, useMemo} from 'react';
 import {FilterValuesType, TaskType, TodoListsType} from '../AppWithRedux';
 import styles from './styles.module.css'
 import {AddItemForm} from './AddItemForm';
@@ -23,22 +23,21 @@ export type TodoListPropsType = {
 }
 
 export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
-    console.log('todo list')
     let {id, title, filter} = currentTodolist
 
     const dispatch = useDispatch()
     const tasksOfCurrentTodolist = useSelector<AppRootState, Array<TaskType>>(state => state.tasks[id])
-    const getFilteredTasks = (tasks: Array<TaskType>, filter: FilterValuesType): Array<TaskType> => {
+    const filteredTasks = useMemo((): Array<TaskType> => {
         switch (filter) {
             case 'Completed' :
-                return tasks.filter(task => task.isDone)
+                return tasksOfCurrentTodolist.filter(task => task.isDone)
             case 'Active':
-                return tasks.filter(task => !task.isDone)
+                return tasksOfCurrentTodolist.filter(task => !task.isDone)
             default:
-                return tasks
+                return tasksOfCurrentTodolist
         }
-    };
-    const filteredTasks: Array<TaskType> = getFilteredTasks(tasksOfCurrentTodolist, filter)
+    },[tasksOfCurrentTodolist, filter]) //при измененении зависимостей, произойдет перерисовка, а при изменении, напр., заголовка TodoList, нет
+
     const addNewTask = useCallback((titleFromInput: string) => {
         dispatch(addTaskAC(titleFromInput, id))
     }, [dispatch])
@@ -49,7 +48,7 @@ export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
         : (<div>List is empty</div>)
 
     const onClickAllFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "All")),[dispatch])
-    const  onClickActiveFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "Active")),[dispatch])
+    const onClickActiveFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "Active")),[dispatch])
     const onClickCompletedFilter = useCallback(() => dispatch(ChangeTodolistFilterAC(id, "Completed")),[dispatch])
 
 
@@ -71,15 +70,15 @@ export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
             <ButtonGroup fullWidth disableElevation size="small">
 
                 <ButtonWithMemo currentButton={'All'}
-                                filterValue={filter}
+                                color={filter === 'All' ? 'secondary' : 'primary'}
                                 onClickHandler={onClickAllFilter}
                 />
                 <ButtonWithMemo currentButton={'Active'}
-                                filterValue={filter}
+                                color={filter === 'Active' ? 'secondary' : 'primary'}
                                 onClickHandler={onClickActiveFilter}
                 />
                 <ButtonWithMemo currentButton={'Completed'}
-                                filterValue={filter}
+                                color={filter === 'Completed' ? 'secondary' : 'primary'}
                                 onClickHandler={onClickCompletedFilter}
                 />
 
@@ -89,15 +88,15 @@ export const TodoList = memo(({currentTodolist}: TodoListPropsType) => {
 })
 
 export type ButtonWithMemoType = {
-    filterValue: FilterValuesType
+    color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" | undefined;
     onClickHandler: () => void
-    currentButton: FilterValuesType
+    currentButton: string
 }
 
 const ButtonWithMemo = memo((props: ButtonWithMemoType) => {
     return <Button variant="contained"
                    fullWidth
-                   color={props.filterValue === props.currentButton ? 'secondary' : 'primary'}
+                   color={props.color}
                    sx={{fontSize: '10px', minWidth: 'fit-content'}}
                    onClick={props.onClickHandler}>
         {props.currentButton}
